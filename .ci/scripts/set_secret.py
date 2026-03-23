@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 
 import argparse
-from azure.keyvault import KeyVaultClient
-from azure.common.client_factory import get_client_from_cli_profile
+from azure.identity import DefaultAzureCredential
+from azure.keyvault.secrets import SecretClient
 from dotenv import load_dotenv
 import os
 import sys
@@ -12,8 +12,9 @@ def set_secret(kv_endpoint, secret_name, secret_value):
     if not secret_value:
         raise ValueError("Secret value cannot be empty")
     
-    client = get_client_from_cli_profile(KeyVaultClient)
-    client.set_secret(kv_endpoint, secret_name, secret_value)
+    credential = DefaultAzureCredential()
+    client = SecretClient(vault_url=kv_endpoint, credential=credential)
+    client.set_secret(secret_name, secret_value)
     return "Successfully created secret: {secret_name} in keyvault: {kv_endpoint}".format(
         secret_name=secret_name, kv_endpoint=kv_endpoint)
 
