@@ -80,7 +80,7 @@ def main(argv):
         env_path = find_dotenv()
 
     try:
-        auth = get_auth(env_path) if get_auth is not None else None
+        auth = get_auth(env_path)
         ws = Workspace.create(
             name=workspace_name,
             subscription_id=subscription_id,
